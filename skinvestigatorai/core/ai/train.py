@@ -4,7 +4,7 @@ from skinvestigatorai.core.ai.config import train_dir, val_dir, test_dir
 from skinvestigatorai.core.data_scraper import DataScraper
 
 
-def main(filename='models/skinvestigator_nano_40MB_91_38_acc.h5'):
+def main(filename='models/v2/skinvestigator.h5'):
     # check if data is downloaded and if not download it
     if not os.path.exists(train_dir):
         print('Downloading data...')
@@ -17,10 +17,10 @@ def main(filename='models/skinvestigator_nano_40MB_91_38_acc.h5'):
           'malignant')
 
     detector = SkinCancerDetector(train_dir, val_dir, test_dir)
-    train_generator, val_generator, test_datagen = detector.preprocess_data()
+    train_generator, val_generator = detector.preprocess_data()
     detector.build_model(num_classes=len(train_generator.class_indices))
     detector.train_model(train_generator, val_generator)
-    detector.evaluate_model(test_datagen)
+    detector.evaluate_model()
     detector.save_model(filename)
 
 

@@ -9,9 +9,9 @@ COPY . /app/
 
 # Install any needed packages and run setup.py
 RUN apt-get update
-RUN apt-get install -y --no-install-recommends python3.10 python3-pip python3.10-dev curl
-RUN python3.10 -m pip install --upgrade pip
-RUN python3.10 -m pip install -e .
+RUN apt-get install -y --no-install-recommends python3.9 python3-pip python3.9-dev curl
+RUN python3.9 -m pip install --upgrade pip
+RUN python3.9 -m pip install -e .
 RUN apt-get clean
 RUN rm -rf /var/lib/apt/lists/*
 

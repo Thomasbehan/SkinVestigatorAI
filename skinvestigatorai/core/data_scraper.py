@@ -1,6 +1,8 @@
 import os
 import argparse
 import json
+import time
+
 import requests
 import concurrent.futures
 import mimetypes
@@ -62,12 +64,17 @@ class DataScraper:
         next_url = self.image_list_url
 
         def process_image(idx, image_metadata, directory):
+            if image_metadata["metadata"]["clinical"]["benign_malignant"] != "benign" and \
+                    image_metadata["metadata"]["clinical"]["benign_malignant"] != "malignant":
+                return
+
             self._download_and_save_image(image_metadata,
                                           directory + "/" + image_metadata["metadata"]["clinical"]["benign_malignant"])
 
         count = 0
         while next_url and (count < limit or limit == -1):
             print(str(count) + " CURRENT URL: ", next_url)
+            time.sleep(1)
             response = requests.get(next_url)
             print("RESPONSE: ", response)
             response_data = json.loads(response.content.decode("utf-8"))

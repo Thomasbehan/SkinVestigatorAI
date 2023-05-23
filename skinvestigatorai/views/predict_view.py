@@ -6,8 +6,12 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import img_to_array
 
 # Load your trained model
-model_path = 'models/skinvestigator_nano_40MB_91_38_acc.h5'
-model = load_model(model_path)
+
+model_to_run = {'nano': 'models/skinvestigator_nano_40MB_91_38_acc.h5',
+                 'basic': 'models/skin_cancer_detection_model.h5',
+                 'best': 'models/v2/best_model.h5',
+                 'gpu': 'skin_cancer_detection_model_all_GPU.h5',}
+model = load_model(model_to_run['best'])
 
 # Define the class labels
 class_labels = ['benign', 'malignant', 'unknown']
