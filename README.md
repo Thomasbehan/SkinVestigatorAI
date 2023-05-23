@@ -239,6 +239,8 @@ This project is licensed under the GNU General Public License v3.0 - see the [LI
 ## References
 
 ## Citation
+Datasets:
+- ISIC (International Skin Imaging Collaboration) Archive: An online repository of dermatology images for research and analysis. [Online]. Available: https://www.isic-archive.com/
 
 ## Disclaimer
 This project is not intended to be used as a medical diagnostic tool. The authors of this project are not medical professionals and are not responsible for any medical decisions made by users of this project.
