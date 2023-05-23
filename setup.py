@@ -24,7 +24,6 @@ requires = [
     'torchvision==0.15.1',
     'tqdm==4.65.0',
     'albumentations==1.3.0',
-    'imbalanced-learn==0.10.1',
 ]
 
 tests_require = [
