@@ -74,11 +74,11 @@ class SkinCancerDetector:
         model.add(layers.Flatten())
         model.add(layers.Dense(512, activation='relu'))
         model.add(layers.BatchNormalization())
-        model.add(layers.Dropout(0.4))
+        model.add(layers.Dropout(0.5))
 
         model.add(layers.Dense(256, activation='relu'))
         model.add(layers.BatchNormalization())
-        model.add(layers.Dropout(0.3))
+        model.add(layers.Dropout(0.5))
 
         model.add(layers.Dense(num_classes, activation='softmax', dtype=tf.float32))
 
@@ -102,11 +102,10 @@ class SkinCancerDetector:
                                            update_freq='epoch', profile_batch=0)
         reduce_lr_callback = ReduceLROnPlateau(
             monitor='val_loss',
-            factor=0.9,
-            patience=10,
+            factor=0.5,
+            patience=7,
             min_lr=0.000001,
             cooldown=1,
-            min_delta=0.001,
         )
         model_checkpoint_callback = ModelCheckpoint(filepath="models/v2/best_model.h5",
                                                     save_best_only=True, monitor='val_loss', mode='min', verbose=1)
