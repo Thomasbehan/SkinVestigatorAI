@@ -2,7 +2,7 @@ import os
 import datetime
 import albumentations as A
 import tensorflow as tf
-from tensorflow.keras import layers, models
+from tensorflow.keras import layers, models, regularizers
 from tensorflow.keras.callbacks import TensorBoard, ReduceLROnPlateau, ModelCheckpoint, EarlyStopping
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from skinvestigatorai.core.data_gen import DataGen
@@ -49,32 +49,23 @@ class SkinCancerDetector:
 
     def build_model(self, num_classes):
         model = models.Sequential()
-        model.add(layers.Conv2D(64, (3, 3), activation='relu', padding='same', input_shape=(150, 150, 3)))
+
+        model.add(layers.Conv2D(64, (3, 3), activation='relu', padding='same', input_shape=(150, 150, 3), kernel_regularizer=regularizers.l2(0.01)))
         model.add(layers.BatchNormalization())
         model.add(layers.MaxPooling2D((2, 2)))
 
-        model.add(layers.Conv2D(128, (3, 3), activation='relu', padding='same'))
+        model.add(layers.Conv2D(128, (3, 3), activation='relu', padding='same', kernel_regularizer=regularizers.l2(0.01)))
         model.add(layers.BatchNormalization())
-        model.add(layers.MaxPooling2D((2, 2)))
-
-        model.add(layers.Conv2D(128, (3, 3), activation='relu', padding='same'))
-        model.add(layers.BatchNormalization())
-        model.add(layers.Conv2D(128, (3, 3), activation='relu', padding='same'))
-        model.add(layers.BatchNormalization())
-        model.add(layers.MaxPooling2D((2, 2)))
-
-        model.add(layers.Conv2D(256, (3, 3), activation='relu', padding='same'))
-        model.add(layers.BatchNormalization())
-        model.add(layers.Conv2D(256, (3, 3), activation='relu', padding='same'))
+        model.add(layers.Conv2D(128, (3, 3), activation='relu', padding='same', kernel_regularizer=regularizers.l2(0.01)))
         model.add(layers.BatchNormalization())
         model.add(layers.MaxPooling2D((2, 2)))
 
         model.add(layers.Flatten())
-        model.add(layers.Dense(512, activation='relu'))
+        model.add(layers.Dense(256, activation='relu', kernel_regularizer=regularizers.l2(0.01)))
         model.add(layers.BatchNormalization())
         model.add(layers.Dropout(0.5))
 
-        model.add(layers.Dense(256, activation='relu'))
+        model.add(layers.Dense(64, activation='relu', kernel_regularizer=regularizers.l2(0.01)))
         model.add(layers.BatchNormalization())
         model.add(layers.Dropout(0.5))
 
