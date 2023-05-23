@@ -21,9 +21,10 @@ class SkinCancerDetector:
 
     def preprocess_data(self):
         self.augmentations = A.Compose([
-            A.Rotate(limit=10),
-            A.ShiftScaleRotate(shift_limit=0.2, scale_limit=0.2),
+            A.Rotate(limit=40),
             A.VerticalFlip(),
+            A.HorizontalFlip(),
+            A.GaussNoise(),
             A.RandomBrightnessContrast(),
         ])
 
@@ -50,7 +51,7 @@ class SkinCancerDetector:
 
     def build_model(self, num_classes):
         model = models.Sequential()
-        model.add(layers.Conv2D(32, (3, 3), activation='relu', padding='same', input_shape=(150, 150, 3)))
+        model.add(layers.Conv2D(64, (3, 3), activation='relu', padding='same', input_shape=(150, 150, 3)))
         model.add(layers.BatchNormalization())
         model.add(layers.MaxPooling2D((2, 2)))
 
