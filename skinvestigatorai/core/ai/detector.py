@@ -22,10 +22,8 @@ class SkinCancerDetector:
     def preprocess_data(self):
         self.augmentations = A.Compose([
             A.Rotate(limit=40),
-            A.VerticalFlip(),
-            A.HorizontalFlip(),
+            A.RandomBrightness(),
             A.GaussNoise(),
-            A.RandomBrightnessContrast(),
         ])
 
         self.malignant_repeat_count = len(os.listdir(self.train_dir + '/benign')) // len(
@@ -55,7 +53,7 @@ class SkinCancerDetector:
         model.add(layers.BatchNormalization())
         model.add(layers.MaxPooling2D((2, 2)))
 
-        model.add(layers.Conv2D(64, (3, 3), activation='relu', padding='same'))
+        model.add(layers.Conv2D(128, (3, 3), activation='relu', padding='same'))
         model.add(layers.BatchNormalization())
         model.add(layers.MaxPooling2D((2, 2)))
 
@@ -102,8 +100,8 @@ class SkinCancerDetector:
                                            update_freq='epoch', profile_batch=0)
         reduce_lr_callback = ReduceLROnPlateau(
             monitor='val_loss',
-            factor=0.5,
-            patience=7,
+            factor=0.1,
+            patience=10,
             min_lr=0.000001,
             cooldown=1,
         )
@@ -139,3 +137,4 @@ class SkinCancerDetector:
             raise ValueError("Model has not been built. Call build_model() first.")
 
         self.model.save(filename)
+        self.model.summary()
