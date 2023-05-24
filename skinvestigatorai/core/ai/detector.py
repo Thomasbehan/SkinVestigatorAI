@@ -109,13 +109,14 @@ class SkinCancerDetector:
         reduce_lr_callback = ReduceLROnPlateau(
             monitor='val_loss',
             factor=0.1,
-            patience=10,
+            patience=15,
             min_lr=0.000001,
             cooldown=1,
+            min_delta=0.0001,
         )
         model_checkpoint_callback = ModelCheckpoint(filepath="models/v2/best_model.h5",
                                                     save_best_only=True, monitor='val_loss', mode='min', verbose=1)
-        early_stopping_callback = EarlyStopping(monitor='val_loss', patience=20, restore_best_weights=True)
+        early_stopping_callback = EarlyStopping(monitor='val_loss', patience=40, restore_best_weights=True)
 
         history = self.model.fit(
             train_generator,
