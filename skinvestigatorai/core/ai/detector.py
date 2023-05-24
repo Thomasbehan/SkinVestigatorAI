@@ -109,10 +109,10 @@ class SkinCancerDetector:
         reduce_lr_callback = ReduceLROnPlateau(
             monitor='val_loss',
             factor=0.1,
-            patience=15,
+            patience=10,
             min_lr=0.000001,
             cooldown=1,
-            min_delta=0.0001,
+            min_delta=0.001,
         )
         model_checkpoint_callback = ModelCheckpoint(filepath="models/v2/best_model.h5",
                                                     save_best_only=True, monitor='val_loss', mode='min', verbose=1)
