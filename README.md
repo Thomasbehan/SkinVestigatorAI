@@ -192,37 +192,77 @@ Each folder is further organized into subfolders, separating the images based on
 ## Model
 The model is a convolutional neural network (CNN) that uses transfer learning to classify skin lesion images as benign or malignant. The model is built using the Keras API and is trained using the TensorFlow backend. The model is trained using the Adam optimizer and the binary cross-entropy loss function.
 Here is a summary of the model architecture:
+````bash
+Model: "sequential"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #
+=================================================================
+ conv2d (Conv2D)             (None, 150, 150, 64)      1792
 
-    Model: "sequential_1"
-    _________________________________________________________________
-    Layer (type)                 Output Shape              Param #   
-    =================================================================
-    conv2d_1 (Conv2D)            (None, 224, 224, 32)      896       
-    _________________________________________________________________
-    max_pooling2d_1 (MaxPooling2 (None, 112, 112, 32)      0         
-    _________________________________________________________________
-    conv2d_2 (Conv2D)            (None, 112, 112, 64)      18496     
-    _________________________________________________________________
-    max_pooling2d_2 (MaxPooling2 (None, 56, 56, 64)        0         
-    _________________________________________________________________
-    conv2d_3 (Conv2D)            (None, 56, 56, 128)       73856     
-    _________________________________________________________________
-    max_pooling2d_3 (MaxPooling2 (None, 28, 28, 128)       0         
-    _________________________________________________________________
-    conv2d_4 (Conv2D)            (None, 28, 28, 128)       147584    
-    _________________________________________________________________
-    max_pooling2d_4 (MaxPooling2 (None, 14, 14, 128)       0         
-    _________________________________________________________________
-    flatten_1 (Flatten)          (None, 25088)             0         
-    _________________________________________________________________
-    dense_1 (Dense)              (None, 512)               12845568  
-    _________________________________________________________________
-    dense_2 (Dense)              (None, 1)                 513       
-    =================================================================
-    Total params: 13,053,313
-    Trainable params: 13,053,313
-    Non-trainable params: 0
-    _________________________________________________________________
+ batch_normalization (BatchN  (None, 150, 150, 64)     256
+ ormalization)
+
+ max_pooling2d (MaxPooling2D  (None, 75, 75, 64)       0
+ )
+
+ conv2d_1 (Conv2D)           (None, 75, 75, 64)        36928
+
+ batch_normalization_1 (Batc  (None, 75, 75, 64)       256
+ hNormalization)
+
+ max_pooling2d_1 (MaxPooling  (None, 37, 37, 64)       0
+ 2D)
+
+ conv2d_2 (Conv2D)           (None, 37, 37, 128)       73856
+
+ batch_normalization_2 (Batc  (None, 37, 37, 128)      512
+ hNormalization)
+
+ conv2d_3 (Conv2D)           (None, 37, 37, 128)       147584
+
+ batch_normalization_3 (Batc  (None, 37, 37, 128)      512
+ hNormalization)
+
+ max_pooling2d_2 (MaxPooling  (None, 18, 18, 128)      0
+ 2D)
+
+ conv2d_4 (Conv2D)           (None, 18, 18, 256)       295168
+
+ batch_normalization_4 (Batc  (None, 18, 18, 256)      1024
+ hNormalization)
+
+ conv2d_5 (Conv2D)           (None, 18, 18, 256)       590080
+
+ batch_normalization_5 (Batc  (None, 18, 18, 256)      1024
+ hNormalization)
+
+ max_pooling2d_3 (MaxPooling  (None, 9, 9, 256)        0
+ 2D)
+
+ flatten (Flatten)           (None, 20736)             0
+
+ dense (Dense)               (None, 512)               10617344
+
+ batch_normalization_6 (Batc  (None, 512)              2048
+ hNormalization)
+
+ dropout (Dropout)           (None, 512)               0
+
+ dense_1 (Dense)             (None, 256)               131328
+
+ batch_normalization_7 (Batc  (None, 256)              1024
+ hNormalization)
+
+ dropout_1 (Dropout)         (None, 256)               0
+
+ dense_2 (Dense)             (None, 2)                 514
+
+=================================================================
+Total params: 11,901,250
+Trainable params: 11,897,922
+Non-trainable params: 3,328
+=================================================================
+````
 
 ## Performance
 The model achieved an accuracy of 91% and a loss of 22% on the testing dataset.
