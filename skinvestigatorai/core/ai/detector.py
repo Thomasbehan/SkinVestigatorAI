@@ -24,6 +24,8 @@ class SkinCancerDetector:
             A.Rotate(limit=40),
             A.RandomBrightness(),
             A.GaussNoise(),
+            A.HorizontalFlip(),
+            A.VerticalFlip(),
         ])
 
         self.malignant_repeat_count = len(os.listdir(self.train_dir + '/benign')) // len(
@@ -49,7 +51,6 @@ class SkinCancerDetector:
 
     def build_model(self, num_classes):
         model = models.Sequential()
-
         model.add(layers.Conv2D(64, (3, 3),
                                 activation='relu',
                                 padding='same',
@@ -88,8 +89,8 @@ class SkinCancerDetector:
 
         model.add(layers.Dense(num_classes, activation='softmax', dtype=tf.float32))
 
-        model.compile(optimizer='adam',
-                      loss='binary_crossentropy',
+        model.compile(optimizer='RMSprop',
+                      loss='categorical_crossentropy',
                       metrics=['accuracy'])
 
         self.model = model
@@ -108,13 +109,16 @@ class SkinCancerDetector:
                                            update_freq='epoch', profile_batch=0)
         reduce_lr_callback = ReduceLROnPlateau(
             monitor='val_loss',
-            factor=0.1,
+            factor=0.9,
             patience=10,
             min_lr=0.000001,
             cooldown=1,
             min_delta=0.001,
         )
-        model_checkpoint_callback = ModelCheckpoint(filepath="models/v2/best_model.h5",
+        # Model checkpoint name unique to time and size of the model
+        model_name = 'model-{epoch:03d}-{val_loss:.4f}.h5'
+
+        model_checkpoint_callback = ModelCheckpoint(filepath="models/v2/" + model_name,
                                                     save_best_only=True, monitor='val_loss', mode='min', verbose=1)
         early_stopping_callback = EarlyStopping(monitor='val_loss', patience=40, restore_best_weights=True)
 
