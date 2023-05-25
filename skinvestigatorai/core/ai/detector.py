@@ -3,6 +3,7 @@ import datetime
 import albumentations as A
 import tensorflow as tf
 from tensorflow.keras import layers, models, regularizers
+from tensorflow.keras.losses import BinaryCrossentropy
 from tensorflow.keras.callbacks import TensorBoard, ReduceLROnPlateau, ModelCheckpoint, EarlyStopping
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from skinvestigatorai.core.data_gen import DataGen
@@ -15,6 +16,8 @@ class SkinCancerDetector:
         self.test_dir = test_dir
         self.log_dir = log_dir
         self.model = None
+        self.weight_benign = 1.0
+        self.weight_malignant = 1.0
         self.batch_size = 64
         self.augmentations = None
         self.malignant_repeat_count = 1
@@ -28,8 +31,12 @@ class SkinCancerDetector:
             A.VerticalFlip(),
         ])
 
-        self.malignant_repeat_count = len(os.listdir(self.train_dir + '/benign')) // len(
-            os.listdir(self.train_dir + '/malignant'))
+        total_samples = len(os.listdir(self.train_dir + '/benign')) + len(os.listdir(self.train_dir + '/malignant'))
+
+        self.weight_benign = total_samples / (2 * len(os.listdir(self.train_dir + '/benign')))
+        self.weight_malignant = total_samples / (2 * len(os.listdir(self.train_dir + '/malignant')))
+        print('Benign weight: ', self.weight_benign)
+        print('Malignant weight: ', self.weight_malignant)
 
         train_generator = DataGen(
             self.train_dir,
@@ -89,8 +96,8 @@ class SkinCancerDetector:
 
         model.add(layers.Dense(num_classes, activation='softmax', dtype=tf.float32))
 
-        model.compile(optimizer='RMSprop',
-                      loss='categorical_crossentropy',
+        model.compile(optimizer='Adam',
+                      loss=BinaryCrossentropy(from_logits=False, class_weight={0: self.weight_benign, 1: self.weight_malignant}),
                       metrics=['accuracy'])
 
         self.model = model
