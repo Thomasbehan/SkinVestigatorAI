@@ -97,7 +97,7 @@ class SkinCancerDetector:
         model.add(layers.Dense(num_classes, activation='softmax', dtype=tf.float32))
 
         model.compile(optimizer='Adam',
-                      loss=BinaryCrossentropy(from_logits=False, class_weight={0: self.weight_benign, 1: self.weight_malignant}),
+                      loss=BinaryCrossentropy(from_logits=False),
                       metrics=['accuracy'])
 
         self.model = model
@@ -133,6 +133,7 @@ class SkinCancerDetector:
             train_generator,
             epochs=epochs,
             validation_data=val_generator,
+            class_weight={0: self.weight_benign, 1: self.weight_malignant},
             callbacks=[tensorboard_callback, reduce_lr_callback, model_checkpoint_callback, early_stopping_callback])
         return history
 
