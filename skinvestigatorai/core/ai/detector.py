@@ -27,8 +27,6 @@ class SkinCancerDetector:
             A.Rotate(limit=40),
             A.RandomBrightness(),
             A.GaussNoise(),
-            A.HorizontalFlip(),
-            A.VerticalFlip(),
         ])
 
         total_samples = len(os.listdir(self.train_dir + '/benign')) + len(os.listdir(self.train_dir + '/malignant'))
@@ -127,7 +125,7 @@ class SkinCancerDetector:
 
         model_checkpoint_callback = ModelCheckpoint(filepath="models/v2/" + model_name,
                                                     save_best_only=True, monitor='val_loss', mode='min', verbose=1)
-        early_stopping_callback = EarlyStopping(monitor='val_loss', patience=40, restore_best_weights=True)
+        early_stopping_callback = EarlyStopping(monitor='val_loss', patience=50, restore_best_weights=True)
 
         history = self.model.fit(
             train_generator,
