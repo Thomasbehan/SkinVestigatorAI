@@ -116,14 +116,14 @@ class SkinCancerDetector:
                                            update_freq='epoch', profile_batch=0)
         reduce_lr_callback = ReduceLROnPlateau(
             monitor='val_loss',
-            factor=0.9,
-            patience=10,
+            factor=0.1,
+            patience=20,
             min_lr=0.000001,
             cooldown=1,
-            min_delta=0.001,
+            min_delta=0.0001,
         )
         # Model checkpoint name unique to time and size of the model
-        model_name = 'model-{epoch:03d}-{val_loss:.4f}.h5'
+        model_name = 'model-{epoch:03d}-{val_accuracy:.4f}-{val_loss:.4f}.h5'
 
         model_checkpoint_callback = ModelCheckpoint(filepath="models/v2/" + model_name,
                                                     save_best_only=True, monitor='val_loss', mode='min', verbose=1)
