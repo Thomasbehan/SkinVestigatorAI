@@ -5,31 +5,34 @@ from skinvestigatorai.core.data_scraper import DataScraper
 
 
 def test_create_output_folders():
-    test_train_dir = "test_data/train"
-    test_val_dir = "test_data/validation"
-    test_test_dir = "test_data/test"
+    data_dir = "test_data/"
+    test_dir = "test_data/test"
+    train_dir = "test_data/train"
+    temp_dir = "test_data/temp"
+    benign_dir = "test_data/temp/benign"
+    malignant_dir = "test_data/temp/malignant"
 
-    data_scraper = DataScraper(train_dir=test_train_dir, val_dir=test_val_dir, test_dir=test_test_dir)
+    data_scraper = DataScraper(data_dir, 1)
 
     # Call the internal function
     data_scraper._create_output_folders()
 
     # Check if the directories were created
-    assert os.path.exists(test_train_dir)
-    assert os.path.exists(test_val_dir)
-    assert os.path.exists(test_test_dir)
+    assert os.path.exists(test_dir)
+    assert os.path.exists(train_dir)
+    assert os.path.exists(temp_dir)
+    assert os.path.exists(benign_dir)
+    assert os.path.exists(malignant_dir)
 
     # Cleanup
     shutil.rmtree("test_data")
 
 
-@patch("skinvestigatorai.core.data_scraper.DataScraper.download_images")
+@patch("skinvestigatorai.core.data_scraper.DataScraper.download_and_split_images")
 def test_download_images(mock_download_images):
     data_scraper = DataScraper()
-    data_scraper.download_images()
+    data_scraper.download_and_split_images()
 
     # Test if the download_images() method is called once
     mock_download_images.assert_called_once()
 
-# You may add more tests to cover other functions like _image_safe_check, _download_and_save_image, etc.
-# However, some of these tests may require mocking external calls to the API and may not be as straightforward.

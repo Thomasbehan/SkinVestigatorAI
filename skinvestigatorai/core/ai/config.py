@@ -1,3 +1,3 @@
 train_dir = 'data/train'
-val_dir = 'data/validation'
 test_dir = 'data/test'
+val_dir = test_dir

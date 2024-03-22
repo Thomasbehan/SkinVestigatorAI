@@ -26,6 +26,7 @@ requires = [
     'vit-keras==0.1.2',
     'tensorflow_addons==0.20.0',
     'albumentations',
+    'keras-tuner',
 ]
 
 tests_require = [
